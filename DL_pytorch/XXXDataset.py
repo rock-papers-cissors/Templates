@@ -17,7 +17,7 @@ class XXXDataset(object):
 
 
 # test XXDataset
-from matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 import torchvision
 import torchvision.transforms as transforms
 if __name__ == '__main__':

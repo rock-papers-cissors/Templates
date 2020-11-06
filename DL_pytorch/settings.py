@@ -7,3 +7,6 @@ params = {
     'root_dir': '~/Templates/DL_pytorch',
     
 }
+
+def fix_settings():
+    pass

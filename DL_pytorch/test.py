@@ -5,7 +5,7 @@ from XXDataset import XXXDataset
 from networks.XXXNet import XXXNet
 import torch.optim as optim
 import torch.nn as nn
-from settings import params
+from settings import params, fix_settings
 
 def test(dataloader, net):
     correct = 0
@@ -20,6 +20,9 @@ def test(dataloader, net):
     print('Accuracy of the network on the 10000 test images: %d %%' % (100*correct/total))
 
 if __name__ == '__main__':
+
+    fix_settings()
+
     transform = get_transform()
     testset = XXXDataset(root='./data/test', transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=4, shuffle=True, num_workers=2)

@@ -5,7 +5,7 @@ from XXDataset import XXXDataset
 from networks.XXXNet import XXXNet
 import torch.optim as optim
 import torch.nn as nn
-from settings import params
+from settings import params, fix_settings
 
 def train(dataloader, net, criterion, optimizer):
 
@@ -28,6 +28,8 @@ def train(dataloader, net, criterion, optimizer):
     print('Finished Training')
 
 if __name__ == '__main__':
+    fix_settings
+
     # prepare dataset
     transform = get_transform()
     trainset = XXXDataset(root='./data/train', transform=transform)
