@@ -2,8 +2,9 @@ import os
 import numpy as np
 import torch
 from PIL import Image
+from torch.utils import data
 
-class XXXDataset(object):
+class XXXDataset(data.Dataset):
 
     def __init__(self, root, transforms):
         self.root = root

@@ -13,6 +13,8 @@ def train(dataloader, net, criterion, optimizer):
         running_loss = 0.0
         for i, data in enumerate(trainloader):
             inputs, labels = data
+            inputs = inputs.to(device)
+            labels = labels.to(device)
             optimizer.zero_grad()
 
             outputs = net(inputs)
@@ -28,7 +30,10 @@ def train(dataloader, net, criterion, optimizer):
     print('Finished Training')
 
 if __name__ == '__main__':
-    fix_settings
+    fix_settings # fix_settings
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    print('using device', device)
+
 
     # prepare dataset
     transform = get_transform()
@@ -36,14 +41,14 @@ if __name__ == '__main__':
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=4, shuffle=True, num_workers=2)
 
     # prepare network
-    net = XXXNet()
+    net = XXXNet().to(device)
 
     # define loss function and optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=params['lr'], momentum=params['momentum'])
 
     # train
-    train(trainloader, net, criterion, optimizer)
+    train(trainloader, net, criterion, optimizer, device)
 
     # save model
     save_model_path = os.path.join('models', params['model_name'])
