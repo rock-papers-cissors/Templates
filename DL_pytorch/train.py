@@ -7,7 +7,7 @@ import torch.optim as optim
 import torch.nn as nn
 from settings import params, fix_settings
 
-def train(dataloader, net, criterion, optimizer):
+def train(dataloader, net, criterion, optimizer, device):
 
     for epoch in range(params['max_epoches']):
         running_loss = 0.0
@@ -27,7 +27,16 @@ def train(dataloader, net, criterion, optimizer):
                 print('[%d, %5d] loss: %.3f' % (epoch+1, i+1, running_loss/2000))
                 running_loss = 0.0
 
+        if (epoch+1)%params['lr_freq'] == 0:
+            adjust_learning_rate(optimizer, epoch, params['lr'], params['lr_decay'], params['lr_freq'])
+
     print('Finished Training')
+
+def adjust_learning_rate(optimizer, epoch, lr_init, lr_decay, lr_freq):
+    lr = lr_init * ( lr_decay ** (epoch // lr_freq))
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = lr
+    return lr
 
 if __name__ == '__main__':
     fix_settings # fix_settings
