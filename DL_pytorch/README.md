@@ -9,10 +9,12 @@ We provide ...., along with a minimal execution example (on the XXX dataset). Th
 - `models/` contains trained models
 - `results/` contains prediction results
 - `utils/` contains:
-* an implementation blablabla (xxx.py)
-* preprocessing subroutines (xxxx.py)
+	* an implementation blablabla (xxx.py)
+	* preprocessing subroutines (xxxx.py)
 
 #### Dependencies
+
+pip install -r requirements.txt
 
 #### Reference
 

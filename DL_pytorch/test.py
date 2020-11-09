@@ -19,9 +19,12 @@ def test(dataloader, net):
             correct += (predicted == labels).sum().item()
     print('Accuracy of the network on the 10000 test images: %d %%' % (100*correct/total))
 
-if __name__ == '__main__':
-
-    fix_settings()
+def main(params)
+    # reproducitiblity
+    torch.manual_seed(0) 
+    np.random.seed(0) 
+    torch.backends.cudnn.deterministic = False # cuDNN deterministically select an algorithm, possibly at the cost of reduced performance
+    torch.set_deterministic(True) # optional, some operation is without a deterministic alternative and would throw an error
 
     transform = get_transform()
     testset = XXXDataset(root='./data/test', transform=transform)
@@ -36,3 +39,8 @@ if __name__ == '__main__':
 
     # train
     return test(testloader, net)
+
+if __name__ == '__main__':
+    from settings import params, fix_settings
+    fix_settings()
+    main(params)

@@ -5,9 +5,8 @@ from XXDataset import XXXDataset
 from networks.XXXNet import XXXNet
 import torch.optim as optim
 import torch.nn as nn
-from settings import params, fix_settings
 
-def train(dataloader, net, criterion, optimizer, device):
+def train(dataloader, net, criterion, optimizer, params, device):
 
     for epoch in range(params['max_epoches']):
         running_loss = 0.0
@@ -32,14 +31,21 @@ def train(dataloader, net, criterion, optimizer, device):
 
     print('Finished Training')
 
+
 def adjust_learning_rate(optimizer, epoch, lr_init, lr_decay, lr_freq):
     lr = lr_init * ( lr_decay ** (epoch // lr_freq))
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
     return lr
 
-if __name__ == '__main__':
-    fix_settings # fix_settings
+
+def main(params):
+    # reproducitiblity
+    torch.manual_seed(0) 
+    np.random.seed(0) 
+    torch.backends.cudnn.deterministic = False # cuDNN deterministically select an algorithm, possibly at the cost of reduced performance
+    torch.set_deterministic(True) # optional, some operation is without a deterministic alternative and would throw an error
+
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     print('using device', device)
 
@@ -57,8 +63,15 @@ if __name__ == '__main__':
     optimizer = optim.SGD(net.parameters(), lr=params['lr'], momentum=params['momentum'])
 
     # train
-    train(trainloader, net, criterion, optimizer, device)
+    train(trainloader, net, criterion, optimizer, params, device)
 
     # save model
     save_model_path = os.path.join('models', params['model_name'])
     torch.save(net.state_dict(), save_model_path)
+
+
+if __name__ == '__main__':
+    from settings import params, fix_settings
+    fix_settings()
+    main(params)
+    

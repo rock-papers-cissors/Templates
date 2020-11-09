@@ -8,5 +8,7 @@ params = {
     
 }
 
-def fix_settings():
-    pass
+def fix_settings(args=None):
+    if args is not None:
+        for k, v in args.items():
+            params[k] = v
