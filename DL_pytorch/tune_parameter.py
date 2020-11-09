@@ -5,32 +5,37 @@ import test
 import quantitive_evaluate
 import itertools
 import pandas as pd
+import numpy as np
+import os
 
-def manul_tune():
-    args = {
-            'key1': [1, 2, 3],
-            'key2': ['a', 'b', 'c']
-            }
-    npdtypes = ['i2', 'a4']
+def manual_tune(args, res_keys, npdtypes):
     keys = []
     values = []
     for k, v in args.items():
         keys.append(k)
         values.append(v)
+    keys += res_keys
     record_list = []
     for c in itertools.product(*values):
+        print('Try this setting : ', dict(zip(keys, c)))
         settings.fix_settings(dict(zip(keys, c)))
         train.main(settings.params)
         test.main(settings.params)
-        res = evaluate()
-        record_list.append(tuple([*c, res]))
-    results = pd.PandasFrame(np.array(
+        res = quantitive_evaluate.main(settings.params, 'relpred')
+        record_list.append(tuple([*c, *[res[k] for k in res_keys]]))
+    results = pd.DataFrame(np.array(
         record_list,
-        dtype=[(keys[i], ndtypes[i] for i in range(len(keys)))]
+        dtype=[(keys[i], npdtypes[i]) for i in range(len(keys))]
         ))
-    results.to_csv()
+    results.to_csv(os.path.join('expr_log.csv'))
 
 if __name__ == '__main__':
     
-    if sys.args[1] == 'manual':
-        manual_tune(args)
+    if sys.argv[1] == 'manual':
+        args = {
+            'arg1': ['a', 'b', 'c'],
+            'arg2': [True, False]
+            }
+        npdtypes = ['a4', 'bool', 'f8', 'f8', 'f8']
+        res_keys = ['metric1', 'metric2', 'metric3']
+        manual_tune(args, res_keys, npdtypes)
